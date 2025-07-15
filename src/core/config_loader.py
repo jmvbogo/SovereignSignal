@@ -1,33 +1,36 @@
 """
-Loads and caches configuration from config/ directory.
+Configuration loader for JSON and environment variables.
 """
+
 import json
 import os
+from dotenv import load_dotenv
 
 class ConfigLoader:
     _instance = None
 
-    @staticmethod
-    def get_instance():
-        if ConfigLoader._instance is None:
-            ConfigLoader()
-        return ConfigLoader._instance
-
     def __init__(self):
-        if ConfigLoader._instance:
-            return
+        # Load environment variables from .env
+        load_dotenv()
         self.config = {}
-        self.load_all()
-        ConfigLoader._instance = self
+        # Load all JSON config files
+        config_dir = os.getenv("CONFIG_DIR", "config")
+        for fname in os.listdir(config_dir):
+            if fname.endswith(".json"):
+                path = os.path.join(config_dir, fname)
+                try:
+                    with open(path) as f:
+                        key = fname.replace(".json", "")
+                        self.config[key] = json.load(f)
+                except Exception:
+                    pass
 
-    def load_all(self):
-        base = os.path.join(os.getcwd(), 'config')
-        for fname in os.listdir(base):
-            if fname.endswith('.json') or fname.endswith('.template'):
-                with open(os.path.join(base, fname)) as f:
-                    try:
-                        self.config[fname] = json.load(f)
-                    except json.JSONDecodeError:
-                        self.config[fname] = {}
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = ConfigLoader()
+        return cls._instance
+
     def get_config(self):
+        """Return loaded configuration dictionary."""
         return self.config

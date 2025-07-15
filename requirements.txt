@@ -6,3 +6,5 @@ web3
 python-bitcoinrpc
 pgpy
 schedule
+pytest
+flake8

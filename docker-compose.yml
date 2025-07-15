@@ -2,33 +2,87 @@ version: '3.8'
 services:
   db:
     image: postgres:13
-    env_file: .env
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: sovereign_db
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   sig_001:
     build: .
     command: python3 src/sig_001/aletheia.py
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    environment:
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
+    healthcheck:
+      test: ["CMD-SHELL", "exit 0"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
   sig_002:
     build: .
     command: python3 src/sig_002/echo_node.py
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exit 0"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
   web_ui:
     build: .
+    command: python3 src/web_ui/app.py
     ports:
       - "5000:5000"
-    command: python3 src/web_ui/app.py
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    environment:
+      - DB_CONNECTION_STRING=${DB_CONNECTION_STRING}
+      - PGP_PASSPHRASE=${PGP_PASSPHRASE}
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
   tasks:
     build: .
     command: python3 src/tasks/scheduler.py
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exit 0"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
 
 volumes:
   db_data:
-
-# TODO: Add healthchecks and resource limits
