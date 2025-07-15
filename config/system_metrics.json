@@ -1,0 +1,9 @@
+// Expected structure:
+// {
+//   "keyserver_uptime_thresholds": {
+//     "minor": 95,
+//     "major": 85,
+//     "critical": 70
+//   }
+// }
+{}

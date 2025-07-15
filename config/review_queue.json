@@ -1,0 +1,6 @@
+// Expected structure:
+// {
+//   "escalation_time_minutes": 60,
+//   "roles": ["sentinel", "admin"]
+// }
+{}

@@ -1,0 +1,8 @@
+Flask
+python-dotenv
+requests
+psycopg2-binary
+web3
+python-bitcoinrpc
+pgpy
+schedule

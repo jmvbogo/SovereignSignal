@@ -1,0 +1,7 @@
+// Expected structure:
+// {
+//   "blockchain": "ethereum" or "bitcoin",
+//   "network": "mainnet" or "testnet",
+//   "frequency": "monthly"
+// }
+{}

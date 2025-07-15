@@ -1,0 +1,7 @@
+// Expected structure:
+// {
+//   "primary": "<primary webhook URL>",
+//   "fallback": "<fallback email or webhook>",
+//   "retry": {"max_attempts": 3, "backoff_seconds": 60}
+// }
+{}

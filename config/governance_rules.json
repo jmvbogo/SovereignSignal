@@ -1,0 +1,11 @@
+// Expected structure:
+// {
+//   "quorum_threshold": 0.75,
+//   "delta_thresholds": {
+//     "low": 0.1,
+//     "moderate": 0.3,
+//     "high": 0.6,
+//     "extreme": 0.9
+//   }
+// }
+{}
