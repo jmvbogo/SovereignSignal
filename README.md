@@ -26,8 +26,3 @@ Populate `.env` based on `.env.template`. Review `config/*.json` for consensus, 
 - Start services: `scripts/run_all.sh`
 - Submit claims via API: `POST /api/submit_claim`
 
-## Contributing
-Please fork and submit PRs. Contact maintainers for access.
-
-## License
-Proprietary – All rights reserved by Architect.
